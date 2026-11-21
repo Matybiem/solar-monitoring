@@ -1,0 +1,18 @@
+{
+  "name": "eslint-config-solar",
+  "version": "0.1.0",
+  "description": "Shared ESLint configuration for Solar Monitoring project",
+  "main": "index.js",
+  "type": "commonjs",
+  "exports": {
+    ".": "./index.js"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-import": "^2.29.0"
+  }
+}

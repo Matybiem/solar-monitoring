@@ -1,0 +1,40 @@
+{
+  "name": "solar-monitoring",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Solar Monitoring - IoT platform for solar energy and battery monitoring",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "bootstrap": "pnpm install",
+    "dev": "pnpm --filter @solar/web dev",
+    "build": "pnpm run build",
+    "lint": "pnpm run lint",
+    "typecheck": "pnpm run typecheck",
+    "test": "pnpm run test",
+    "test:e2e": "pnpm --filter @solar/web test:e2e",
+    "test:contract": "pnpm --filter @solar/web test:contract",
+    "clean": "pnpm run clean",
+    "fmt": "pnpm run fmt",
+    "version:patch": "pnpm version patch",
+    "version:minor": "pnpm version minor",
+    "version:major": "pnpm version major",
+    "release": "pnpm run build && pnpm run test && git push --tags"
+  },
+  "workspaces": [
+    "apps/web",
+    "apps/firmware",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@solar/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'Design tokens build placeholder'",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "style-dictionary": "^4.1.0"
+  }
+}

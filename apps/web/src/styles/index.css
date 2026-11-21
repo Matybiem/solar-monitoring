@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #2563eb;
+    --color-background-primary: #ffffff;
+    --color-text-primary: #171717;
+  }
+
+  [data-theme="dark"] {
+    --color-primary: #60a5fa;
+    --color-background-primary: #0a0a0a;
+    --color-text-primary: #fafafa;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter Variable', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    @apply bg-neutral-25 text-neutral-900 antialiased;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-md border border-neutral-200/60;
+  }
+
+  .metric-card {
+    @apply rounded-lg p-4 border border-neutral-200 shadow-sm bg-white transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-neutral-700 bg-transparent border border-transparent rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 hover:bg-neutral-100 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .input-field {
+    @apply block w-full px-3 py-2 text-sm text-neutral-900 bg-white border border-neutral-300 rounded-md placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold leading-none;
+  }
+
+  .badge-success {
+    @apply badge bg-emerald-100 text-emerald-700;
+  }
+
+  .badge-danger {
+    @apply badge bg-rose-100 text-rose-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-700;
+  }
+
+  .badge-neutral {
+    @apply badge bg-neutral-100 text-neutral-700;
+  }
+
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-neutral-200 border-t-blue-600;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

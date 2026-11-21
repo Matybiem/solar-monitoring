@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Telemetry: public read, write only by device owner
+    match /telemetry/{deviceId}/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == deviceId;
+    }
+
+    // Devices: public read, write by owner or admin
+    match /devices/{deviceId} {
+      allow read: if true;
+      allow write: if request.auth != null && (request.auth.uid == deviceId || request.auth.token.admin == true);
+    }
+
+    // Weather cache: public read, admin write only
+    match /weather_cache/{locationKey} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Aggregated data: public read, admin write only
+    match /aggregated/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}
