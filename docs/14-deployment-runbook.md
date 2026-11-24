@@ -156,6 +156,39 @@ firebase hosting:channel:list
 # Verificar certificado válido en navegador (icono candado)
 ```
 
+### 5.5 Flashear firmware al ESP32-C3 (idf.py flash)
+
+Si el dispositivo se desconecta/reconecta cíclicamente (cada ~1s) y `idf.py flash` falla con `PermissionError(13)` de pySerial, entra en modo download manteniendo presionado el botón **BOOT** mientras conectas la placa (o mientras pulsa **EN/RST**):
+
+1. Presiona y mantén presionado el botón **BOOT** de la placa ESP32-C3.
+2. Conecta el cable USB (o pulsa EN/RST mientras mantienes BOOT).
+3. Suelta **BOOT** solo cuando el puerto COM se estabilice en el Administrador de Dispositivos.
+4. Ejecuta el flash:
+   ```bash
+   make firmware:flash   # idf.py -p COM5 flash
+   ```
+
+> **Nota:** Si el cable USB es solo de carga (sin datos) el puerto no se detectará. Usa un cable USB con transferencia de datos. Si el puerto USB no entrega suficiente corriente (picos de WiFi ~500mA), usa un hub con alimentación externa.
+
+### 5.6 Opciones de Visualización de Telemetría (Decisión)
+
+El firmware envía telemetría a Firebase Realtime Database en la ruta `/telemetry/{timestamp}` (función `communication_send_telemetry` en `apps/firmware/components/communication/src/communication.c:46`). Existen cuatro opciones para visualizar estos datos en el dashboard web:
+
+| Opción | Descripción | Ventajas | Desventajas | Estado |
+|--------|-------------|----------|-------------|--------|
+| **1. Firebase Realtime DB** (decisión) | Web lee `/telemetry` vía Firebase SDK (`onValue`) | Ya configurado en firmware y web; persistencia; multi-dispositivo | Costo si supera quota Spark | **Seleccionada** |
+| **2. WebSocket / MQTT local** | Broker local (Mosquitto); web suscribe | Latencia mínima, sin nube, sin costo | Infraestructura extra, NAT/firewall | No implementado |
+| **3. HTTP polling** | Web consulta API REST del ESP32 | Simple, sin brokers | No escala, NAT, ESP32 como servidor | No implementado |
+| **4. SSE** | Server-Sent Events unidireccional ESP32→Web | Simple, unidireccional | NAT/firewall, no persiste | No implementado |
+
+**Decisión adoptada:** Opción 1 (Firebase Realtime Database).
+
+**Próximos pasos para habilitar la visualización (opción 1):**
+
+1. **Firmware** — Crear una tarea FreeRTOS que consuma `g_telemetry_queue` (`main.c:47`) y llame a `communication_send_telemetry(&packet)`; setear `wifi_connected = true` tras `fw_wifi_connect()` en `communication.c`.
+2. **Firmware** — Poblar `packet.rssi` en `system_measure()` con `esp_wifi_sta_get_rssi()` o similar.
+3. **Web** — Reemplazar datos hardcodeados en `dashboard/index.tsx` por un hook `useEffect` + `onValue(ref(database, 'telemetry'), ...)` que muestre los últimos valores en tiempo real.
+
 ---
 
 ## 6. Observabilidad para Operaciones

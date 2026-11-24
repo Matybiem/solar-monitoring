@@ -1,5 +1,5 @@
 #include "power.h"
-#include "hal/esp_sleep.h"
+#include "fw_sleep.h"
 #include "esp_log.h"
 
 static const char *TAG = "POWER";
@@ -12,17 +12,17 @@ esp_err_t power_init(void)
 
 esp_err_t power_enter_deep_sleep(uint32_t duration_sec)
 {
-    ESP_LOGI(TAG, "Entering deep sleep for %d seconds", duration_sec);
+    ESP_LOGI(TAG, "Entering deep sleep for %lu seconds", (unsigned long)duration_sec);
 
     // Configure RTC timer wakeup
-    esp_err_t ret = esp_sleep_enable_timer_wakeup(duration_sec * 1000000ULL);
+    esp_err_t ret = fw_sleep_enable_timer_wakeup(duration_sec * 1000000ULL);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to configure timer wakeup");
         return ret;
     }
 
     ESP_LOGI(TAG, "Going to deep sleep now...");
-    esp_deep_sleep_start();
+    fw_deep_sleep_start();
 
     // Should never reach here
     return ESP_OK;

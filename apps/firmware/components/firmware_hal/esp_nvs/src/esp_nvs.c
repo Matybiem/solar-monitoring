@@ -1,11 +1,11 @@
-#include "esp_nvs.h"
+#include "fw_nvs.h"
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "esp_log.h"
 
-static const char *TAG = "ESP_NVS";
+static const char *TAG = "FW_NVS";
 
-esp_err_t esp_nvs_init(void)
+esp_err_t fw_nvs_init(void)
 {
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -15,7 +15,7 @@ esp_err_t esp_nvs_init(void)
     return ret;
 }
 
-esp_err_t esp_nvs_set_str(const char *key, const char *value)
+esp_err_t fw_nvs_set_str(const char *key, const char *value)
 {
     nvs_handle_t handle;
     esp_err_t ret = nvs_open("solar_config", NVS_READWRITE, &handle);
@@ -28,7 +28,7 @@ esp_err_t esp_nvs_set_str(const char *key, const char *value)
     return ret;
 }
 
-esp_err_t esp_nvs_get_str(const char *key, char *value, size_t *max_len)
+esp_err_t fw_nvs_get_str(const char *key, char *value, size_t *max_len)
 {
     nvs_handle_t handle;
     esp_err_t ret = nvs_open("solar_config", NVS_READONLY, &handle);

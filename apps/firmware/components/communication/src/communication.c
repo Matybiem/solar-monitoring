@@ -1,7 +1,8 @@
 #include "communication.h"
-#include "hal/esp_wifi.h"
-#include "hal/esp_http.h"
+#include "fw_wifi.h"
+#include "fw_http.h"
 #include "esp_log.h"
+#include <stdbool.h>
 #include "cJSON.h"
 
 static const char *TAG = "COMMUNICATION";
@@ -9,26 +10,26 @@ static const char *TAG = "COMMUNICATION";
 static char firebase_url[256];
 static bool wifi_connected = false;
 
-esp_err_t communication_init(void)
+esp_err_t communication_init(const system_config_t *config)
 {
     esp_err_t ret;
 
     // Initialize Wi-Fi
-    ret = esp_wifi_init();
+    ret = fw_wifi_init();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize Wi-Fi");
         return ret;
     }
 
     // Connect to Wi-Fi
-    ret = esp_wifi_connect();
+    ret = fw_wifi_connect(config->wifi_ssid, config->wifi_password);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to connect to Wi-Fi");
         return ret;
     }
 
     // Initialize HTTP client
-    ret = esp_http_init();
+    ret = fw_http_init();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize HTTP client");
         return ret;
@@ -84,7 +85,7 @@ esp_err_t communication_send_telemetry(const telemetry_packet_t *packet)
     snprintf(url, sizeof(url), "%s/%lu.json", firebase_url, packet->timestamp);
 
     // Send HTTP POST
-    esp_err_t ret = esp_http_post(url, json_str);
+    esp_err_t ret = fw_http_post(url, json_str);
     cJSON_free(json_str);
 
     if (ret != ESP_OK) {

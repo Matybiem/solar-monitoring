@@ -1,10 +1,9 @@
-#include "esp_sleep.h"
-#include "esp_sleep.h"
+#include "fw_sleep.h"
 #include "esp_log.h"
 
-static const char *TAG = "ESP_SLEEP";
+static const char *TAG = "FW_SLEEP";
 
-esp_err_t esp_sleep_enable_timer_wakeup(uint64_t duration_us)
+esp_err_t fw_sleep_enable_timer_wakeup(uint64_t duration_us)
 {
     esp_err_t ret = esp_sleep_enable_timer_wakeup(duration_us);
     if (ret != ESP_OK) {
@@ -15,7 +14,7 @@ esp_err_t esp_sleep_enable_timer_wakeup(uint64_t duration_us)
     return ESP_OK;
 }
 
-void esp_deep_sleep_start(void)
+void fw_deep_sleep_start(void)
 {
     ESP_LOGI(TAG, "Entering deep sleep...");
     esp_deep_sleep_start();

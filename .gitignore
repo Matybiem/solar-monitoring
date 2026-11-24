@@ -57,3 +57,7 @@ test-results/
 # Misc
 *.pem
 .env.example
+apps/firmware/wifi_secrets.h
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*.local

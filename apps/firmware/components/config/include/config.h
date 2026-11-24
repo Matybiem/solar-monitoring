@@ -3,7 +3,7 @@
 
 #include "nvs_flash.h"
 #include "esp_err.h"
-#include "main.h"
+#include "telemetry_types.h"
 
 #ifdef __cplusplus
 extern "C" {

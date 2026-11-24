@@ -23,8 +23,9 @@ esp_err_t config_load(system_config_t *config)
     nvs_handle_t handle;
     esp_err_t ret = nvs_open(CONFIG_NAMESPACE, NVS_READONLY, &handle);
     if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "No existing config found, using defaults");
-        return ret;
+        ESP_LOGI(TAG, "No existing config found, using defaults");
+        /* Keep the caller-provided defaults (e.g. from wifi_secrets.h) as-is */
+        return ESP_OK;
     }
 
     size_t len = sizeof(config->wifi_ssid);
@@ -44,6 +45,7 @@ esp_err_t config_save(const system_config_t *config)
     if (ret != ESP_OK) return ret;
 
     nvs_set_str(handle, "wifi_ssid", config->wifi_ssid);
+    nvs_set_str(handle, "wifi_password", config->wifi_password);
     nvs_set_u32(handle, "measure_interval", config->measurement_interval_sec);
     nvs_set_u32(handle, "deep_sleep_sec", config->deep_sleep_duration_sec);
 

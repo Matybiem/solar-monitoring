@@ -3,12 +3,14 @@
 #include "esp_sleep.h"
 #include "esp_timer.h"
 #include "driver/rtc_io.h"
-#include "acquisition/acquisition.h"
-#include "communication/communication.h"
-#include "power/power.h"
-#include "diagnostics/diagnostics.h"
-#include "config/config.h"
-#include "time/time_sync.h"
+#include <string.h>
+#include "acquisition.h"
+#include "communication.h"
+#include "power.h"
+#include "diagnostics.h"
+#include "config.h"
+#include "time_sync.h"
+#include "wifi_secrets.h"
 
 static const char *TAG = "MAIN";
 
@@ -20,7 +22,8 @@ system_config_t g_config = {
     .battery_voltage_low = 3.2f,
     .battery_voltage_critical = 3.0f,
     .rssi_warning = -80,
-    .wifi_ssid = ""
+    .wifi_ssid = WIFI_SSID,
+    .wifi_password = WIFI_PASSWORD
 };
 
 EventGroupHandle_t g_wifi_event_group;
@@ -33,7 +36,7 @@ QueueHandle_t g_telemetry_queue;
 void app_main(void)
 {
     ESP_LOGI(TAG, "Solar Monitoring Firmware v1.0.0 starting...");
-    ESP_LOGI(TAG, "Free heap: %d bytes", esp_get_free_heap_size());
+    ESP_LOGI(TAG, "Free heap: %lu bytes", (unsigned long)esp_get_free_heap_size());
 
     // Initialize NVS and load configuration
     ESP_ERROR_CHECK(config_init());
@@ -52,6 +55,7 @@ void app_main(void)
             case SYSTEM_STATE_MEASURE:
                 ESP_LOGI(TAG, "Starting measurement cycle");
                 system_measure();
+                vTaskDelay(pdMS_TO_TICKS(g_config.measurement_interval_sec * 1000));
                 break;
 
             case SYSTEM_STATE_SEND:
@@ -59,7 +63,7 @@ void app_main(void)
                 break;
 
             case SYSTEM_STATE_SLEEP:
-                ESP_LOGI(TAG, "Entering deep sleep for %d seconds", g_config.deep_sleep_duration_sec);
+                ESP_LOGI(TAG, "Entering deep sleep for %lu seconds", (unsigned long)g_config.deep_sleep_duration_sec);
                 system_sleep(g_config.deep_sleep_duration_sec);
                 break;
 
@@ -78,7 +82,7 @@ esp_err_t system_init(void)
     ESP_ERROR_CHECK(acquisition_init());
     ESP_LOGI(TAG, "Acquisition initialized");
 
-    ESP_ERROR_CHECK(communication_init());
+    ESP_ERROR_CHECK(communication_init(&g_config));
     ESP_LOGI(TAG, "Communication initialized");
 
     ESP_ERROR_CHECK(power_init());
@@ -89,6 +93,11 @@ esp_err_t system_init(void)
 
     ESP_LOGI(TAG, "System initialization complete");
     return ESP_OK;
+}
+
+esp_err_t system_sleep(uint32_t duration_sec)
+{
+    return power_enter_deep_sleep(duration_sec);
 }
 
 esp_err_t system_measure(void)

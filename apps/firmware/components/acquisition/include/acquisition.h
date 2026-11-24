@@ -1,7 +1,8 @@
 #ifndef ACQUISITION_H
 #define ACQUISITION_H
 
-#include "main.h"
+#include "telemetry_types.h"
+#include "esp_err.h"
 
 #ifdef __cplusplus
 extern "C" {
