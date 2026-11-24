@@ -65,6 +65,31 @@
 
 ---
 
+## 6. Convención de Nombrado de Ramas
+
+Las ramas se nombran con el formato `tipo/<descripcion-en-kebab-case>`:
+
+| Tipo | Uso | Ejemplo |
+|------|-----|---------|
+| `feature/` | Nueva funcionalidad | `feature/firmware-wifi`, `feature/firebase-dashboard` |
+| `fix/` | Corrección de bug | `fix/telemetry-queue-overflow` |
+| `docs/` | Documentación | `docs/deployment-runbook` |
+| `refactor/` | Refactor sin cambios de comportamiento | `refactor/acquisition-init` |
+| `perf/` | Mejoras de rendimiento | `perf/main-loop-delay` |
+| `test/` | Agregar tests | `test/acquisition-unit` |
+| `chore/` | Mantenimiento / build / CI | `chore/esp-idf-config` |
+
+**Regla clave:** nunca trabajes directamente sobre `main`. Crea siempre una rama `feature/` (o el tipo correspondiente) antes de modificar código.
+
+---
+
+### Estado actual de la rama
+
+- **Rama activa:** `feature/firmware-wifi`
+- **Último commit:** `4892039` — `docs: add telemetry visualization options and project rules/skills`
+- **Push:** `origin/feature/firmware-wifi` (trackeando)
+- **PR abierto en:** https://github.com/Matybiem/solar-monitoring/pull/new/feature/firmware-wifi
+
 ### Consulta antes de proceder
 
 Cualquier operación que involucre los puntos **1** o **2** de esta regla requiere confirmación del administrador (el usuario dueño del proyecto). No proceder sin respuesta afirmativa explícita.
